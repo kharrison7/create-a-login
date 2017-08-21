@@ -1,1 +1,38 @@
-USERLIST
+<!DOCTYPE html>
+ <html>
+   <head>
+     <title></title>
+     <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
+     <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css" />
+   </head>
+<body>
+     <form action="/" method="post">
+           <!-- <h1>Your List</h1> -->
+           <p>Userlist</p>
+           <input type="text" name="user" placeholder="Username" />
+           <input type="text" name="user" placeholder="Password" />
+           <button type="submit">Add Todo</button>
+      </form>
+    <div>
+      <!-- This displays todo items if there are some listed. -->
+      {{#todosList}}
+      <form id={{.}} action="/{{.}}" method="post">
+        <div class="holder">
+          <p class="leftMove"><span>{{.}}</span></p>
+            <button class="completed" type="submit">Completed</button>
+          </div>
+        </div>
+       </form>
+      {{/todosList}}
+      <!-- This displays if there are currently no todo items. -->
+      {{^todosList}}
+       <p>No Todo Items Currently</p>
+      {{/todosList}}
+      <!-- This shows the completed items. -->
+      <h4>Completed:</h4>
+      {{#doneList}}
+        <p class="strike">{{.}}</p>
+      {{/doneList}}
+   </div>
+  <script type="text/javascript" src="javascripts/main.js"></script>
+</body>

@@ -1,6 +1,8 @@
+// This is example code from the videos.
 const express =require('express');
 const router = express.Router();
 
+// middleware
 router.use(function(req,res,next){
 console.log("Middleware to auth the admin");
 next();
