@@ -75,6 +75,14 @@ app.get("/", function (req, res) {
   res.render('index', {username: authorizedSession});
 });
 
+// This allows for a logout.
+app.post("/logout", function (req, res) {
+  // This resets values and redirects.
+  authSession = "";
+  req.login = undefined;
+  res.redirect('/login');
+});
+
 
 // These functions are based on the tutorial video series.
 // This runs a test middleware function that requests the date in dev tools.
