@@ -8,27 +8,75 @@ const mustacheExpress = require('mustache-express');
 const userJS = require('./user.js');
 const adminRouter = require('./public/routes/admin');
 const loginRouter = require('./public/routes/login');
-// const data = require('./items.js');
-
+const data = require('./items.js');
+const session = require('express-session');
 // Creates and includes a file system (fs) module
 const fs = require('fs');
-
+// Create authorization session
+let authorizedSession = "";
 // Create app
 let app = express();
-// Set app to use bodyParser()` middleware.
+// Set app to use bodyParser() middleware.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(bodyParser.text());
 // Sets the view engine and router.
 app.engine('mustache', mustacheExpress());
 app.set('views', ['./views','./views/admin']);
 app.set('view engine', 'mustache');
 app.use('/admin', adminRouter);
 app.use('/login', loginRouter);
+app.use(express.static(__dirname + '/public'));
 
-// app.use(express.static(__dirname + '/public'));
-// app.use('/admin',adminRouter);
 
+
+
+
+
+//Login Page
+app.post("/login", function (req, res) {
+  console.log("Data Posted");
+  // This finds the un and pw from the submitted form.
+  let username = req.body.username;
+  let password = req.body.password;
+  // This finds the username in user.js
+  let user = userJS.find(username);
+  // If username isn't found redirect.
+  if (userJS.find(username) === undefined){
+    res.redirect('/login');
+  }
+  else {
+    // If the password is correct.
+    if (user.password === password){
+      console.log(user.password);
+      authorizedSession = username;
+      req.login = username;
+      res.redirect('/');
+    }
+    else {
+      res.redirect('/login');
+    }
+  }
+});
+
+// This controls the localhost page.
+app.get("/", function (req, res) {
+  // This is the initial redirect.
+  if (authorizedSession === ""){
+    // console.log("initial redirect");
+    res.redirect('/login');
+    return;
+  }
+  else {
+  // console.log("Else Here");
+  }
+  console.log(' ' + authorizedSession);
+  // This brings up the index.mustache HTML and gives mustache a value for username.
+  res.render('index', {username: authorizedSession});
+});
+
+
+// These functions are based on the tutorial video series.
 // This runs a test middleware function that requests the date in dev tools.
 app.get('/', function(req, res, next){
   let date = new Date();
@@ -38,7 +86,7 @@ app.get('/', function(req, res, next){
 });
 
 // This finds the user landry in the user.js file.
-app.get('/', function(req, res){
+app.get('/landry', function(req, res){
   console.log("Basic get run!");
   let user = userJS.find('landry');
   res.send(user);

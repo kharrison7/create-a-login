@@ -8,16 +8,14 @@ console.log("Middleware to auth the Login");
 next();
 });
 
-
 router.get('/',function(req,res){
   console.log("index for login");
   res.render('login');
 });
 
-router.get('/login',function(req,res){
-  console.log("Login Appears");
-  res.render('login');
-});
-
+// router.get('/login',function(req,res){
+//   console.log("Login Appears");
+//   res.render('login');
+// });
 
 module.exports = router;
