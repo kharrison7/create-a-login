@@ -10,6 +10,8 @@ const adminRouter = require('./public/routes/admin');
 const loginRouter = require('./public/routes/login');
 const data = require('./items.js');
 const session = require('express-session');
+const file = './fill.json';
+const fileTransfer = require('./fill.json');
 // Creates and includes a file system (fs) module
 const fs = require('fs');
 // Create authorization session
@@ -39,8 +41,27 @@ app.post("/signuppageredirect", function (req, res) {
   res.redirect('/signup');
 });
 
-// This currently takes the user to the userlist.
+// This currently stores data in fill.json and takes the user to the userlist.
 app.post("/signup", function (req, res) {
+  let username = req.body.username;
+  let password = req.body.password;
+  let email = req.body.email;
+  console.log(username + " " + password);
+  // This is where I will push to an array of user objects.
+  if( username != "" && username != null && password != "" && password != null){
+      fs.readFile('fill.json', 'utf8', function checkSortFile(err, data){
+          if (err){
+              console.log(err);
+          }
+          else {
+          let value = JSON.parse(data); //converts to an object
+          value.user_List.push({username: username, password: password, email: email});
+          json = JSON.stringify(value); //converts back to json
+          fs.writeFile('fill.json', json, 'utf8'); // writes to file fill.json with json
+          //utf8 is a file format character encoding.
+          // let value2 = JSON.parse(userJS.all);
+          // value2.push({username: username, password: password, email: email});
+      }})};
   res.render('userlist');
 });
 
@@ -114,6 +135,7 @@ app.get('/landry', function(req, res){
 // This sends all the user data from the listen url.
 app.get('/listen', function(req, res){
  res.send(userJS.all);
+ res.send(fill.json.all);
 });
 
 // This ties the file to the proper localhost.
