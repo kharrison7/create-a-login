@@ -28,10 +28,21 @@ app.use('/admin', adminRouter);
 app.use('/login', loginRouter);
 app.use(express.static(__dirname + '/public'));
 
+// This makes the signup page work.
+const signupRouter = require ("./public/routes/signup");
+app.use("/signup", signupRouter); //This assigns the file to the route.
 
+// This takes the user to the sign up page.
+app.post("/signuppageredirect", function (req, res) {
+  authSession = "";
+  req.login = undefined;
+  res.redirect('/signup');
+});
 
-
-
+// This currently takes the user to the userlist.
+app.post("/signup", function (req, res) {
+  res.render('userlist');
+});
 
 //Login Page
 app.post("/login", function (req, res) {
